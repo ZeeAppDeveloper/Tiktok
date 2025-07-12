@@ -2,28 +2,33 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Green Neon LED Timer</title>
+  <title>Green Neon LED Timer (Box Opaque)</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #080808;
       --led-main: #39ff14;
       --led-glow: rgba(57,255,20,0.8);
       --text-light: #e0ffe0;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    html, body {
+      width: 100%; height: 100%;
+      background: transparent;   /* Tam sayfa şeffaf */
+      overflow: hidden;
+    }
     body {
-      background: var(--bg);
-      font-family: 'Orbitron', sans-serif;
-      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-family: 'Orbitron', sans-serif;
     }
     .timer-box {
+      background: #111;           /* Kutunun opak arka planı korundu */
       width: 360px;
       height: 200px;
-      background: #111;
       border-radius: 8px;
       box-shadow:
         0 0 20px var(--led-glow),
@@ -56,8 +61,8 @@
   </div>
 
   <script>
-    // Başlangıç süresini saniye cinsinden ayarla:
-    let remaining = 10 * 60; // 10 dakika
+    // Başlangıç süresi (saniye)
+    let remaining = 10 * 60;
 
     const displayEl = document.getElementById('display');
     function formatTime(sec) {
