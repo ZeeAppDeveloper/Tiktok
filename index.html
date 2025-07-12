@@ -1,101 +1,73 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Modern Circular Countdown</title>
+  <meta charset="UTF-8">
+  <title>LED Style Countdown Timer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --size: 300px;
-      --thickness: 12px;
-      --font: 'Segoe UI', sans-serif;
-      --bg-circle: #2e2e2e;
-      --fg-circle: linear-gradient(135deg, #ff5f6d, #ffc371);
-      --text-color: #ffffff;
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #1a1a1a;
+      background: #000;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font);
+      font-family: 'Orbitron', sans-serif;
     }
-    .countdown {
-      position: relative;
-      width: var(--size);
-      height: var(--size);
+    .timer-container {
+      background: #111;
+      padding: 40px 60px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(255,0,0,0.6), inset 0 0 10px rgba(255,0,0,0.4);
+      text-align: center;
     }
-    .countdown svg {
-      transform: rotate(-90deg);
+    .timer-title {
+      font-size: 1.2rem;
+      color: #f00;
+      letter-spacing: 8px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px rgba(255,0,0,0.8);
     }
-    .countdown circle {
-      fill: none;
-      stroke-width: var(--thickness);
-      r: calc((var(--size) - var(--thickness)) / 2);
-      cx: calc(var(--size) / 2);
-      cy: calc(var(--size) / 2);
-    }
-    .bg {
-      stroke: var(--bg-circle);
-    }
-    .fg {
-      stroke: var(--fg-circle);
-      stroke-linecap: round;
-      stroke-dasharray: calc(2 * 3.1416 * ((var(--size) - var(--thickness)) / 2));
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1s linear;
-    }
-    .timer-text {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      color: var(--text-color);
-      font-size: 3rem;
-      text-shadow: 0 0 8px rgba(0,0,0,0.5);
+    .timer-display {
+      font-size: 6rem;
+      color: #f00;
+      text-shadow:
+        0 0 8px rgba(255,0,0,1),
+        0 0 20px rgba(255,0,0,0.7),
+        0 0 40px rgba(255,0,0,0.5);
     }
   </style>
 </head>
 <body>
-  <div class="countdown">
-    <svg width="var(--size)" height="var(--size)">
-      <circle class="bg"></circle>
-      <circle class="fg"></circle>
-    </svg>
-    <div class="timer-text">00:00</div>
+
+  <div class="timer-container">
+    <div class="timer-title">T I M E R</div>
+    <div class="timer-display" id="display">10:00</div>
   </div>
 
   <script>
-    // Ayarlar
-    const totalSeconds = 5 * 60; // 5 dakika = 300s
-    let remaining = totalSeconds;
+    // Başlangıç süresini saniye cinsinden ayarla:
+    let remaining = 10 * 60; // örn. 10 dakika = 600 saniye
 
-    // DOM elemanları
-    const fgCircle = document.querySelector('.fg');
-    const textEl   = document.querySelector('.timer-text');
-    const radius   = fgCircle.r.baseVal.value;
-    const circumference = 2 * Math.PI * radius;
+    const displayEl = document.getElementById('display');
 
-    fgCircle.style.strokeDasharray = circumference;
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
 
-    function update() {
-      // Zaman formatı
-      const m = String(Math.floor(remaining / 60)).padStart(2, '0');
-      const s = String(remaining % 60).padStart(2, '0');
-      textEl.textContent = `${m}:${s}`;
-
-      // Çember animasyonu
-      const percent = remaining / totalSeconds;
-      fgCircle.style.strokeDashoffset = circumference * (1 - percent);
-
+    function tick() {
+      displayEl.textContent = formatTime(remaining);
       if (remaining > 0) {
         remaining--;
-        setTimeout(update, 1000);
+        setTimeout(tick, 1000);
       }
     }
 
-    // Başlat
-    update();
+    // Sayaçı başlat
+    tick();
   </script>
+
 </body>
 </html>
