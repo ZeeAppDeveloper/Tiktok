@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modern Circular Countdown</title>
+  <style>
+    :root {
+      --size: 300px;
+      --thickness: 12px;
+      --font: 'Segoe UI', sans-serif;
+      --bg-circle: #2e2e2e;
+      --fg-circle: linear-gradient(135deg, #ff5f6d, #ffc371);
+      --text-color: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1a1a1a;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font);
+    }
+    .countdown {
+      position: relative;
+      width: var(--size);
+      height: var(--size);
+    }
+    .countdown svg {
+      transform: rotate(-90deg);
+    }
+    .countdown circle {
+      fill: none;
+      stroke-width: var(--thickness);
+      r: calc((var(--size) - var(--thickness)) / 2);
+      cx: calc(var(--size) / 2);
+      cy: calc(var(--size) / 2);
+    }
+    .bg {
+      stroke: var(--bg-circle);
+    }
+    .fg {
+      stroke: var(--fg-circle);
+      stroke-linecap: round;
+      stroke-dasharray: calc(2 * 3.1416 * ((var(--size) - var(--thickness)) / 2));
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .timer-text {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--text-color);
+      font-size: 3rem;
+      text-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="countdown">
+    <svg width="var(--size)" height="var(--size)">
+      <circle class="bg"></circle>
+      <circle class="fg"></circle>
+    </svg>
+    <div class="timer-text">00:00</div>
+  </div>
+
+  <script>
+    // Ayarlar
+    const totalSeconds = 5 * 60; // 5 dakika = 300s
+    let remaining = totalSeconds;
+
+    // DOM elemanları
+    const fgCircle = document.querySelector('.fg');
+    const textEl   = document.querySelector('.timer-text');
+    const radius   = fgCircle.r.baseVal.value;
+    const circumference = 2 * Math.PI * radius;
+
+    fgCircle.style.strokeDasharray = circumference;
+
+    function update() {
+      // Zaman formatı
+      const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+      const s = String(remaining % 60).padStart(2, '0');
+      textEl.textContent = `${m}:${s}`;
+
+      // Çember animasyonu
+      const percent = remaining / totalSeconds;
+      fgCircle.style.strokeDashoffset = circumference * (1 - percent);
+
+      if (remaining > 0) {
+        remaining--;
+        setTimeout(update, 1000);
+      }
+    }
+
+    // Başlat
+    update();
+  </script>
+</body>
+</html>
